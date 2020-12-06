@@ -28,7 +28,7 @@ public:
 	static void resize(GLFWwindow* window, int width, int height);
 
 	void updatePictureShader(int posObject, int posShader);
-	void placeSticker(double posX, double posY, string texture);
+	void placeSticker(string texture);
 
 	void update();
 	void render();

@@ -17,8 +17,7 @@ void main()
     color = texture(ourTexture1, TexCoord);// * vec4(ourColor, 1.0);
 
     //LEMBRE-SE: aqui o valor dos canais de cor está NORMALIZADO (entre 0.0 e 1.0)
-    
-    // 1a - Exibir imagem grayscale com apenas 1 canal de cor
+    // Exibir imagem grayscale com apenas 1 canal de cor
     if (code == 1) //R
     {
         color = vec4(color.r, color.r, color.r, color.a);
@@ -31,8 +30,5 @@ void main()
     {
         color = vec4(color.b, color.b, color.b, color.a);
     }
-    else if (code == 4)
-    {
-        color = vec4(1.0, 1.0, 1.0, 1.0);
-    }
+
 }

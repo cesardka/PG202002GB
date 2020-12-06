@@ -51,18 +51,18 @@ void SceneManager::initializeGraphics()
 	}
 
 	// Adicionando os shaders
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag"); // BOOM
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag"); // CODE
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag"); // DOG MAULEY
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag"); // ELE EH
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag"); // PENSATIVO
-	addShader("../shaders/transformations.vs", "../shaders/transformations.frag");
-	addShader("../shaders/FiltroColorizacao.vs", "../shaders/FiltroColorizacao.frag");
-	addShader("../shaders/FiltroGrayscale.vs", "../shaders/FiltroGrayscale.frag");
-	addShader("../shaders/FiltroBinarizacao.vs", "../shaders/FiltroBinarizacao.frag");
-	addShader("../shaders/FiltroInversao.vs", "../shaders/FiltroInversao.frag");
-	addShader("../shaders/FiltroLivre.vs", "../shaders/FiltroLivre.frag");
-	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 0. BOOM
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 1. CODE
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 2. DOG MAULEY
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 3. ELE EH
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 4. PENSATIVO
+	addShader("../shaders/transformations.vs", "../shaders/transformations.frag");     // 5. code
+	addShader("../shaders/FiltroColorizacao.vs", "../shaders/FiltroColorizacao.frag"); // 6. corColorizadora
+	addShader("../shaders/FiltroGrayscale.vs", "../shaders/FiltroGrayscale.frag");     // 7.
+	addShader("../shaders/FiltroBinarizacao.vs", "../shaders/FiltroBinarizacao.frag"); // 8. limiar
+	addShader("../shaders/FiltroInversao.vs", "../shaders/FiltroInversao.frag");       // 9.
+	addShader("../shaders/FiltroLivre.vs", "../shaders/FiltroLivre.frag");             // 10.
+	addShader("../shaders/FiltroVignete.vs", "../shaders/FiltroVignete.frag");         // 11.
 
 	//setup the scene -- LEMBRANDO QUE A DESCRIÇÃO DE UMA CENA PODE VIR DE ARQUIVO(S) DE 
 	// CONFIGURAÇÃO
@@ -106,12 +106,12 @@ void SceneManager::updatePictureShader(int posObject, int posShader)
 	objects[posObject]->setShader(shaders[posShader]);
 }
 
-void SceneManager::placeSticker(double posX, double posY, string textureName)
+void SceneManager::placeSticker(string textureName)
 {
 
 	int textureSticker = loadTexture("../textures/" + textureName + ".png");
 	GameObject* obj = new GameObject;
-	obj->setPosition(glm::vec3(posX, posY, 0.0));
+	obj->setPosition(glm::vec3(xMousePos, yMousePos + 100.0, 0.0));
 	obj->setDimension(glm::vec3(50.0f, 50.0f, 2.0f));
 	obj->setTexture(textureSticker);
 	obj->setShader(shaders[6]);
@@ -136,15 +136,15 @@ void SceneManager::update()
 
 	if (xMousePos >= 700 && xMousePos <= 800) {
 		int selectedShader = int(yMousePos) / 50;
-		if (selectedShader == 1)
+		if (selectedShader == 0)
 			currentSticker = "boom";
-		else if (selectedShader == 2)
+		else if (selectedShader == 1)
 			currentSticker = "coder";
-		else if (selectedShader == 3)
+		else if (selectedShader == 2)
 			currentSticker = "dog-mauley";
-		else if (selectedShader == 4)
+		else if (selectedShader == 3)
 			currentSticker = "ele-eh";
-		else if (selectedShader == 5)
+		else if (selectedShader == 4)
 			currentSticker = "pensativo";
 		else
 			currentSticker = "";
@@ -156,9 +156,9 @@ void SceneManager::update()
 		}
 	}
 	else {
-		cout << "Sticker [" << currentSticker << "] " << endl;
+		// cout << "Sticker [" << currentSticker << "] " << endl;
 		if (currentSticker != "") {
-			placeSticker(xMousePos, yMousePos, currentSticker);
+			placeSticker(currentSticker);
 		}
 	}
 }
@@ -184,12 +184,12 @@ void SceneManager::render()
 
 		glActiveTexture(GL_TEXTURE1);
 		// Se utilizar um dos shaders que precisam clippar em cima da textura... (Polaroid ou vignette)
-		if (objects[i]->getShader() == shaders[5]) {
-			glUniform1i(glGetUniformLocation(shaders[i]->Program, "ourTexture3"), 1);
+		if (objects[i]->getShader() == shaders[10]) {
+			glUniform1i(glGetUniformLocation(shaders[10]->Program, "ourTexture3"), 1);
 			glBindTexture(GL_TEXTURE_2D, texturePolaroid);
 		}
-		else if (objects[i]->getShader() == shaders[6]) {
-			glUniform1i(glGetUniformLocation(shaders[5]->Program, "ourTexture2"), 1);
+		else if (objects[i]->getShader() == shaders[11]) {
+			glUniform1i(glGetUniformLocation(shaders[11]->Program, "ourTexture2"), 1);
 			glBindTexture(GL_TEXTURE_2D, textureVignette);
 		}
 
@@ -231,8 +231,6 @@ void SceneManager::setupScene()
 	//Carregamento das texturas (pode ser feito intercalado na criação)
 	//Futuramente, utilizar classe de materiais e armazenar dimensoes, etc
 	unsigned int texID = loadTexture("../textures/lena.png");
-	unsigned int textureVignette = loadTexture("../textures/Vignette.png");
-	unsigned int texturePolaroid = loadTexture("../textures/polaroid.png");
 	unsigned int textureMenu = loadTexture("../textures/menu.png");
 
 	// Carrega textura dos stickers
@@ -260,8 +258,15 @@ void SceneManager::setupScene()
 	obj->setPosition(glm::vec3(750.0f, 300.0f, 1.0));
 	obj->setDimension(glm::vec3(100.0f, 600.0f, 1.0f));
 	obj->setTexture(textureMenu);
-	obj->setShader(shaders[6]);
+	obj->setShader(shaders[0]);
 	objects.push_back(obj);
+
+	shaders[5]->setInt("code", 2);
+	shaders[6]->setVec3("corColorizadora", 1.0, 0.0, 0.0);
+	shaders[8]->setInt("limiar", 120);
+
+	textureVignette = loadTexture("../textures/Vignette.png");
+	texturePolaroid = loadTexture("../textures/polaroid.png");
 
 	//Habilita transparência
 	glEnable(GL_BLEND);
