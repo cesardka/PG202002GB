@@ -111,8 +111,8 @@ void SceneManager::placeSticker(string textureName)
 
 	int textureSticker = loadTexture("../textures/" + textureName + ".png");
 	GameObject* obj = new GameObject;
-	obj->setPosition(glm::vec3(xMousePos, yMousePos, 1.0));
-	obj->setDimension(glm::vec3(50.0f, 50.0f, 1.0f));
+	obj->setPosition(glm::vec3(xMousePos, height - yMousePos, 1.0));
+	obj->setDimension(glm::vec3(80.0f, 80.0f, 1.0f));
 	obj->setTexture(textureSticker);
 	obj->setShader(shaders[6]);
 	objects.push_back(obj);
@@ -185,7 +185,7 @@ void SceneManager::render()
 		glActiveTexture(GL_TEXTURE1);
 		// Se utilizar um dos shaders que precisam clippar em cima da textura... (Polaroid ou vignette)
 		if (objects[i]->getShader() == shaders[10]) {
-			glUniform1i(glGetUniformLocation(shaders[10]->Program, "ourTexture2"), 1);
+			glUniform1i(glGetUniformLocation(shaders[10]->Program, "ourTexture3"), 1);
 			glBindTexture(GL_TEXTURE_2D, texturePolaroid);
 		}
 		else if (objects[i]->getShader() == shaders[11]) {
